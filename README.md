@@ -1,6 +1,8 @@
 # E-sun_CC_fraud
 split topic by notebook
+
 0_ EDA
+
 1_ clustering
 
 Data competition of E-sun bank credit card fraud detection

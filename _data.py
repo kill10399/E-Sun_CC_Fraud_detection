@@ -3,25 +3,9 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 
-train_raw0 = pd.read_csv('train.csv')
+train_raw = pd.read_csv('data/train.csv')
 
-def to_dummy(i):
-    d = {'Y':1, 'y':1, 'N':0,'n':0}
-    try:
-        return d[i]
-    except:
-        return i
-
-def trans_obj(df):
-    isObjCol = df.dtypes=='object'
-    isObjCol = isObjCol[isObjCol==True].index
-    if len(isObjCol) >0:
-        df[isObjCol] = df.select_dtypes(['object']).applymap(lambda x:to_dummy(x))
-    return df
-
-train_raw = trans_obj(train_raw0)
 # set some paramater to used for every notebook
-
 N, N_f = train_raw.shape #1521787, 23
 
 # fraud / non_fraud ind
@@ -38,6 +22,21 @@ txn_amt_cvt = np.array([para_f[1], np.array(ratio)])
 stocn_ratio= train_raw.groupby(['stocn']).agg({'fraud_ind':['count','mean']})
 stocn_ratio.columns=['fraud_cnt', 'fraud_mean']
 
+# transfer Object col into int
+def to_dummy(i):
+    d = {'Y':1, 'y':1, 'N':0,'n':0}
+    try:
+        return d[i]
+    except:
+        return i
+def trans_obj(df):
+    isObjCol = df.dtypes=='object'
+    isObjCol = isObjCol[isObjCol==True].index
+    if len(isObjCol) >0:
+        df[isObjCol] = df.select_dtypes(['object']).applymap(lambda x:to_dummy(x))
+    return df
+
+#OneHot Encoding
 def toOneHot(df, col_name):
     if not col_name:
         raise 'select the col u want to do one_hot encoding'
